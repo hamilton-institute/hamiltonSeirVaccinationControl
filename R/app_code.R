@@ -119,7 +119,6 @@ control_server <- function(input, output, session){
   
   output$plot <- plotly::renderPlotly({
     ##### General setup
-    
     # Inputs are YSU, YSNV, YE, YI, YR, OSU, OSNV, OE, OI, OR, YR0Y, YR0O, OR0Y, OR0O, Yvac, Ovac, Veff
     # where YSU = Young Susceptible Not Yet Vaccinated
     # YSNV = Young Susceptible Refused Vaccine
@@ -132,7 +131,6 @@ control_server <- function(input, output, session){
     # YSNV = Young Susceptible But Refused Vaccine
     # YR = Young Recovered due to having the disease
     # YVR = Young Recovered due to having vaccination
-    
     Y_Pop <- input$pop_Y #Total young susceptible population
     O_Pop <- input$pop_O #Total old susceptible population
     young_nv <- input$vacc_re/100 #Percentage of young people unwilling to get vaccinated
@@ -149,7 +147,7 @@ control_server <- function(input, output, session){
     R0_oo <- input$R0_O #Average number of old people an old person can infect before recovering
     R0_oy <- input$R0_O_Y #Average number of young people an old person can infect before recovering
     R0_yo <- input$R0_O_Y #Average number of old people an young person can infect before recovering
-    R0_yy <- input$R_Y #Average numlibraryber of young people an young person can infect before recovering
+    R0_yy <- input$R_Y #Average number of young people an young person can infect before recovering
     mean_h.t_vacc <- 14 #Mean holding time before the vaccine becomes effective
     effectiveness <- input$vacc_ef/100 #Vaccine effectiveness
     
