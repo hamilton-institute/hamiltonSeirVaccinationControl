@@ -472,7 +472,7 @@ control_server <- function(input, output, session){
                             "Over 65s recovered from disease",
                             "Under 65s successfully vaccinated",
                             "Over 65s successfully vaccinated")
-    final_raw$Date = seq.Date(from = input$start_date, to = input$start_date + nrow(final_raw) - 1,
+    final_raw$Date = seq.Date(from = input$start_vac, to = input$start_vac + nrow(final_raw) - 1,
                     by = 1)
     
     
