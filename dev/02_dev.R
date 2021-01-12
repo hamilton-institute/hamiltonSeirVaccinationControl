@@ -44,7 +44,7 @@ usethis::use_test( "app" )
 # Documentation
 
 ## Vignette ----
-usethis::use_vignette("hamiltonSeirVaccination")
+usethis::use_vignette("hamiltonSeirVaccinationControl")
 devtools::build_vignettes()
 
 ## Code coverage ----
