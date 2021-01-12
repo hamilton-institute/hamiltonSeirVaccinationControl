@@ -147,7 +147,7 @@ control_server <- function(input, output, session){
     R0_oo <- input$R0_O #Average number of old people an old person can infect before recovering
     R0_oy <- input$R0_O_Y #Average number of young people an old person can infect before recovering
     R0_yo <- input$R0_O_Y #Average number of old people an young person can infect before recovering
-    R0_yy <- input$R_Y #Average number of young people an young person can infect before recovering
+    R0_yy <- input$R0_Y #Average number of young people an young person can infect before recovering
     mean_h.t_vacc <- 14 #Mean holding time before the vaccine becomes effective
     effectiveness <- input$vacc_ef/100 #Vaccine effectiveness
     
