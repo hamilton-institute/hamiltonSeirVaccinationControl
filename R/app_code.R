@@ -1,4 +1,4 @@
-#' original_v2 UI Function
+#' control_ui Function
 #'
 #' @description A shiny Module.
 #'
