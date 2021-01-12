@@ -472,7 +472,7 @@ control_server <- function(input, output, session){
                             "Over 65s recovered from disease",
                             "Under 65s successfully vaccinated",
                             "Over 65s successfully vaccinated")
-    final_raw$Date = seq.Date(from = as.Date(input$start_vac), to = as.date(input$start_vac) + nrow(final_raw) - 1,
+    final_raw$Date = seq.Date(from = as.Date(input$start_vac), to = as.Date(input$start_vac) + nrow(final_raw) - 1,
                     by = 1)
     
     # Tidy up into one data frame
