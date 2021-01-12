@@ -1,8 +1,8 @@
 Package: hamiltonSeirVaccinationControl
-Title: Hamilton's vaccination plan 
+Title: Hamilton's vaccination control app 
 Version: 0.0.0.9000
 Authors@R: person('AUTHOR_FIRST', 'AUTHOR_LAST', email = 'consultoria@rseis.com.br', role = c('cre', 'aut'))
-Description: Golem package for the vaccination plan app.
+Description: Golem package for the vaccination control app.
 License: MIT + file LICENSE
 Imports: 
     config,
