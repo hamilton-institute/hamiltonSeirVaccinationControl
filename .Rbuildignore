@@ -1,6 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-app.R
+^app.R
 LICENSE.md
 ^dev$
 ^rsconnect$
