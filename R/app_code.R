@@ -140,6 +140,8 @@ control_server <- function(input, output, session){
     young_inf <- input$inf_Y #Number of young infected
     old_inf <- input$inf_O #Number of old infected
     time_horizon <- input$num_days #Number of days
+    old_rec <- input$rec_O # Over 65s recovered
+    young_rec <- input$rec_Y # Under 65s recovered
     
     # Parameters
     mean_h.t_inf <- 7.4 #Mean holding time in the infected state
@@ -160,19 +162,19 @@ control_server <- function(input, output, session){
     #- - - - - - - - - - - - - - - - - - Creating state and parameter vectors- - - - - - - - - - - - - - - - - - - - - - - - - - - -#
     #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -#
     
-    State <- c(OSU = O_Pop-(old_exp+old_inf), OSV =0, OSVNE =0,
-               OSNV =0, OE =old_exp, OI =old_inf, OR =0, ORV =0,
-               YSU = Y_Pop-(young_exp+young_inf), YSV =0, YSVNE =0,
-               YSNV =0, YE =young_exp, YI =young_inf, YR =0, YRV =0,
-               LOSU = 0, LOSV = 0, LOSVNE = 0, LOSNV = 0, LOE = 0, LOI = 0,
-               LYSU = 0, LYSV = 0, LYSVNE = 0, LYSNV = 0, LYE = 0, LYI = 0)
-    
-    # State <- c(OSU = (1-old_nv)*(O_Pop-(old_exp+old_inf+old_rec)), OSV =0, OSVNE =0, 
-    #        OSNV =old_nv*(O_Pop-(old_exp+old_inf+old_rec)), OE =old_exp, OI =old_inf, OR =old_rec, ORV =0, 
-    #        YSU = (1-young_nv)*(Y_Pop-(young_exp+young_inf+young_rec)), YSV =0, YSVNE =0, 
-    #        YSNV =young_nv*(Y_Pop-(young_exp+young_inf+young_rec)), YE =young_exp, YI =young_inf, YR =young_rec, YRV =0,
-    #        LOSU = 0, LOSV = 0, LOSVNE = 0, LOSNV = 0, LOE = 0, LOI = 0,
-    #        LYSU = 0, LYSV = 0, LYSVNE = 0, LYSNV = 0, LYE = 0, LYI = 0)
+    # State <- c(OSU = O_Pop-(old_exp+old_inf), OSV =0, OSVNE =0,
+    #            OSNV =0, OE =old_exp, OI =old_inf, OR =0, ORV =0,
+    #            YSU = Y_Pop-(young_exp+young_inf), YSV =0, YSVNE =0,
+    #            YSNV =0, YE =young_exp, YI =young_inf, YR =0, YRV =0,
+    #            LOSU = 0, LOSV = 0, LOSVNE = 0, LOSNV = 0, LOE = 0, LOI = 0,
+    #            LYSU = 0, LYSV = 0, LYSVNE = 0, LYSNV = 0, LYE = 0, LYI = 0)
+
+    State <- c(OSU = (1-old_nv)*(O_Pop-(old_exp+old_inf+old_rec)), OSV =0, OSVNE =0,
+           OSNV =old_nv*(O_Pop-(old_exp+old_inf+old_rec)), OE =old_exp, OI =old_inf, OR =old_rec, ORV =0,
+           YSU = (1-young_nv)*(Y_Pop-(young_exp+young_inf+young_rec)), YSV =0, YSVNE =0,
+           YSNV =young_nv*(Y_Pop-(young_exp+young_inf+young_rec)), YE =young_exp, YI =young_inf, YR =young_rec, YRV =0,
+           LOSU = 0, LOSV = 0, LOSVNE = 0, LOSNV = 0, LOE = 0, LOI = 0,
+           LYSU = 0, LYSV = 0, LYSVNE = 0, LYSNV = 0, LYE = 0, LYI = 0)
 
     Parameters <- c(beta00 = R0_oo/(mean_h.t_exp+mean_h.t_inf+mean_h.t_vacc), beta01 = R0_yo/(mean_h.t_exp+mean_h.t_inf+mean_h.t_vacc), 
                 beta10 = R0_oy/(mean_h.t_exp+mean_h.t_inf+mean_h.t_vacc), beta11 = R0_yy/(mean_h.t_exp+mean_h.t_inf+mean_h.t_vacc),
