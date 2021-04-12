@@ -167,10 +167,18 @@ control_server <- function(input, output, session){
                LOSU = 0, LOSV = 0, LOSVNE = 0, LOSNV = 0, LOE = 0, LOI = 0,
                LYSU = 0, LYSV = 0, LYSVNE = 0, LYSNV = 0, LYE = 0, LYI = 0)
     
-    Parameters <- c(beta00 = R0_oo/(mean_h.t_exp+mean_h.t_inf+mean_h.t_vacc), beta01 = R0_yo/(mean_h.t_exp+mean_h.t_inf+mean_h.t_vacc),
-                    beta10 = R0_oy/(mean_h.t_exp+mean_h.t_inf+mean_h.t_vacc), beta11 = R0_yy/(mean_h.t_exp+mean_h.t_inf+mean_h.t_vacc),
-                    vacc = 1/mean_h.t_vacc, veff = effectiveness, gammaE = 1/mean_h.t_exp, gammaI = 1/mean_h.t_inf, WO = 10^12,
-                    WY = 10^12, r_O=old_nv, r_Y=young_nv)
+    # State <- c(OSU = (1-old_nv)*(O_Pop-(old_exp+old_inf+old_rec)), OSV =0, OSVNE =0, 
+    #        OSNV =old_nv*(O_Pop-(old_exp+old_inf+old_rec)), OE =old_exp, OI =old_inf, OR =old_rec, ORV =0, 
+    #        YSU = (1-young_nv)*(Y_Pop-(young_exp+young_inf+young_rec)), YSV =0, YSVNE =0, 
+    #        YSNV =young_nv*(Y_Pop-(young_exp+young_inf+young_rec)), YE =young_exp, YI =young_inf, YR =young_rec, YRV =0,
+    #        LOSU = 0, LOSV = 0, LOSVNE = 0, LOSNV = 0, LOE = 0, LOI = 0,
+    #        LYSU = 0, LYSV = 0, LYSVNE = 0, LYSNV = 0, LYE = 0, LYI = 0)
+
+    Parameters <- c(beta00 = R0_oo/(mean_h.t_exp+mean_h.t_inf+mean_h.t_vacc), beta01 = R0_yo/(mean_h.t_exp+mean_h.t_inf+mean_h.t_vacc), 
+                beta10 = R0_oy/(mean_h.t_exp+mean_h.t_inf+mean_h.t_vacc), beta11 = R0_yy/(mean_h.t_exp+mean_h.t_inf+mean_h.t_vacc),
+                vacc = 1/mean_h.t_vacc, veff = effectiveness, gammaE = 1/mean_h.t_exp, gammaI = 1/mean_h.t_inf, WO = 10^11, 
+                WY = 10^11, r_O=old_nv, r_Y=young_nv)
+
     
     #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -#
     #- - - - - - - - - - - - - - - - - - Time sequence and intial control- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -#
@@ -243,39 +251,39 @@ control_server <- function(input, output, session){
       uYt <- uY(t)
       
       #State equations
-      dOSU <- - (beta00*(OE+OI)/ON + beta10*(YE+YI)/YN)*OSU-uOt*(1-r_O)*OSU - r_O*OSU
-      dOSV <- uOt*(1-r_O)*OSU - (beta00*(OE+OI)/ON + beta10*(YE+YI)/YN)*OSV - (1-veff)*vacc*OSV - vacc*veff*OSV
-      dOSVNE <- (1-veff)*vacc*OSV - (beta00*(OE+OI)/ON + beta10*(YE+YI)/YN)*OSVNE
-      dOSNV <- r_O*OSU-(beta00*(OE+OI)/ON + beta10*(YE+YI)/YN)*OSNV
-      dOE <- (beta00*(OE+OI)/ON + beta10*(YE+YI)/YN)*(OSU + OSV + OSVNE + OSNV) - gammaE*OE
-      dOI <- gammaE*OE - gammaI*OI
-      dOR <- gammaI*OI
-      dORV <- vacc*veff*OSV
-      dYSU <- - (beta01*(OE+OI)/ON + beta11*(YE+YI)/YN)*YSU-uYt*(1-r_Y)*YSU-r_Y*YSU
-      dYSV <- uYt*(1-r_Y)*YSU - (beta01*(OE+OI)/ON + beta11*(YE+YI)/YN)*YSV -(1-veff)*vacc*YSV -vacc* veff*YSV
-      dYSVNE <- (1-veff)*vacc*YSV - (beta01*(OE+OI)/ON + beta11*(YE+YI)/YN)*YSVNE
-      dYSNV <- r_Y*YSU-(beta01*(OE+OI)/ON + beta11*(YE+YI)/YN)*YSNV
-      dYE <- (beta01*(OE+OI)/ON + beta11*(YE+YI)/YN)*(YSU + YSV + YSVNE + YSNV) - gammaE*YE
-      dYI <- gammaE*YE - gammaI*YI
-      dYR <- gammaI*YI
-      dYRV <- vacc*veff*YSV
-      dLOSU <- 0
-      dLYSU <- 0
-      dLOSV <- 0
-      dLYSV <- 0
-      dLOSVNE <- 0
-      dLYSVNE <-0
-      dLOSNV <- 0
-      dLYSNV <- 0
-      dLOE <- 0
-      dLYE <- 0
-      dLOI <- 0
-      dLYI <- 0
-      
-      dxdt <- c(dOSU, dOSV, dOSVNE, dOSNV, dOE, dOI, dOR, dORV, dYSU, dYSV, dYSVNE, dYSNV, dYE, dYI, dYR, dYRV,
-                dLOSU, dLOSV, dLOSVNE, dLOSNV, dLOE, dLOI, dLYSU, dLYSV, dLYSVNE, dLYSNV, dLYE, dLYI )
-      list(dxdt)
-    }
+  dOSU <- - (beta00*(OE+OI)/ON + beta10*(YE+YI)/YN)*OSU-uOt*OSU 
+  dOSV <- uOt*OSU - (beta00*(OE+OI)/ON + beta10*(YE+YI)/YN)*OSV - (1-veff)*vacc*OSV - vacc*veff*OSV
+  dOSVNE <- (1-veff)*vacc*OSV - (beta00*(OE+OI)/ON + beta10*(YE+YI)/YN)*OSVNE
+  dOSNV <- -(beta00*(OE+OI)/ON + beta10*(YE+YI)/YN)*OSNV
+  dOE <- (beta00*(OE+OI)/ON + beta10*(YE+YI)/YN)*(OSU + OSV + OSVNE + OSNV) - gammaE*OE
+  dOI <- gammaE*OE - gammaI*OI
+  dOR <- gammaI*OI
+  dORV <- vacc*veff*OSV
+  dYSU <- - (beta01*(OE+OI)/ON + beta11*(YE+YI)/YN)*YSU-uYt*YSU
+  dYSV <- uYt*YSU - (beta01*(OE+OI)/ON + beta11*(YE+YI)/YN)*YSV -(1-veff)*vacc*YSV -vacc* veff*YSV
+  dYSVNE <- (1-veff)*vacc*YSV - (beta01*(OE+OI)/ON + beta11*(YE+YI)/YN)*YSVNE
+  dYSNV <- -(beta01*(OE+OI)/ON + beta11*(YE+YI)/YN)*YSNV
+  dYE <- (beta01*(OE+OI)/ON + beta11*(YE+YI)/YN)*(YSU + YSV + YSVNE + YSNV) - gammaE*YE
+  dYI <- gammaE*YE - gammaI*YI
+  dYR <- gammaI*YI
+  dYRV <- vacc*veff*YSV
+  dLOSU <- 0
+  dLYSU <- 0
+  dLOSV <- 0
+  dLYSV <- 0
+  dLOSVNE <- 0
+  dLYSVNE <-0
+  dLOSNV <- 0
+  dLYSNV <- 0
+  dLOE <- 0
+  dLYE <- 0
+  dLOI <- 0
+  dLYI <- 0
+  
+  dxdt <- c(dOSU, dOSV, dOSVNE, dOSNV, dOE, dOI, dOR, dORV, dYSU, dYSV, dYSVNE, dYSNV, dYE, dYI, dYR, dYRV,
+            dLOSU, dLOSV, dLOSVNE, dLOSNV, dLOE, dLOI, dLYSU, dLYSV, dLYSVNE, dLYSNV, dLYE, dLYI )
+  list(dxdt)
+}   
     
     #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -#
     #- - - - - - - - - - - - - - - - - - -Solve the state ODEs forwards in time- - - - - - - - - - - - - - - - - - - - - - - - - - -#
@@ -363,29 +371,29 @@ control_server <- function(input, output, session){
       dYI <- 0
       dYR <- 0
       dYRV <- 0
-      dLOSU <- (beta00*(OE+OI)/ON + beta10*(YE+YI)/YN + uOt*(1-r_O)+r_O)*LOSU - uOt*(1-r_O)*LOSV
-      -r_O*LOSNV - (beta00*(OE+OI)/ON + beta10*(YE+YI)/YN)*LOE
-      dLYSU <- (beta01*(OE+OI)/ON + beta11*(YE+YI)/YN + uYt*(1-r_Y)+r_Y)*LYSU - uYt*(1-r_Y)*LYSV
-      - r_Y*LYSNV - (beta01*(OE+OI)/ON + beta11*(YE+YI)/YN)*LYE
+      dLOSU <- (beta00*(OE+OI)/ON + beta10*(YE+YI)/YN + uOt)*LOSU - uOt*LOSV 
+      - (beta00*(OE+OI)/ON + beta10*(YE+YI)/YN)*LOE 
+      dLYSU <- (beta01*(OE+OI)/ON + beta11*(YE+YI)/YN + uYt)*LYSU - uYt*LYSV 
+      - (beta01*(OE+OI)/ON + beta11*(YE+YI)/YN)*LYE 
       dLOSV <- (beta00*(OE+OI)/ON + beta10*(YE+YI)/YN + (1-veff)*vacc + veff*vacc)*LOSV - (1-veff)*vacc*LOSVNE - (beta00*(OE+OI)/ON + beta10*(YE+YI)/YN)*LOE
       dLYSV <- (beta01*(OE+OI)/ON + beta11*(YE+YI)/YN + (1-veff)*vacc + veff*vacc)*LYSV - (1-veff)*vacc*LYSVNE - (beta01*(OE+OI)/ON + beta11*(YE+YI)/YN)*LYE
       dLOSVNE <- (beta00*(OE+OI)/ON + beta10*(YE+YI)/YN)*(LOSVNE-LOE)
       dLYSVNE <- (beta01*(OE+OI)/ON + beta11*(YE+YI)/YN)*(LYSVNE-LYE)
       dLOSNV <- (beta00*(OE+OI)/ON + beta10*(YE+YI)/YN)*(LOSNV-LOE)
       dLYSNV <- (beta01*(OE+OI)/ON + beta11*(YE+YI)/YN)*(LYSNV-LYE)
-      dLOE <- beta00*OSU/ON*(LOSU-LOE) + beta00*OSV/ON*(LOSV-LOE) + beta00*OSVNE/ON*(LOSVNE-LOE) + beta00*OSNV/ON*(LOSNV-LOE) +
-        beta01*YSU/ON*(LYSU-LYE) + beta01*YSV/ON*(LYSV-LYE) + beta01*YSVNE/ON*(LYSVNE-LYE) + beta01*YSNV/ON*(LYSNV-LYE) +
+      dLOE <- beta00*OSU/ON*(LOSU-LOE) + beta00*OSV/ON*(LOSV-LOE) + beta00*OSVNE/ON*(LOSVNE-LOE) + beta00*OSNV/ON*(LOSNV-LOE) + 
+        beta01*YSU/ON*(LYSU-LYE) + beta01*YSV/ON*(LYSV-LYE) + beta01*YSVNE/ON*(LYSVNE-LYE) + beta01*YSNV/ON*(LYSNV-LYE) + 
         gammaE*LOE - gammaE*LOI
-      dLYE <- beta10*OSU/YN*(LOSU-LOE) + beta10*OSV/YN*(LOSV-LOE) + beta10*OSVNE/YN*(LOSVNE-LOE) + beta10*OSNV/YN*(LOSNV-LOE) +
-        beta11*YSU/YN*(LYSU-LYE) + beta11*YSV/YN*(LYSV-LYE) + beta11*YSVNE/YN*(LYSVNE-LYE) + beta11*YSNV/YN*(LYSNV-LYE) +
+      dLYE <- beta10*OSU/YN*(LOSU-LOE) + beta10*OSV/YN*(LOSV-LOE) + beta10*OSVNE/YN*(LOSVNE-LOE) + beta10*OSNV/YN*(LOSNV-LOE) + 
+        beta11*YSU/YN*(LYSU-LYE) + beta11*YSV/YN*(LYSV-LYE) + beta11*YSVNE/YN*(LYSVNE-LYE) + beta11*YSNV/YN*(LYSNV-LYE) + 
         gammaE*LYE - gammaE*LYI
-      dLOI <- beta00*OSU/ON*(LOSU-LOE) + beta00*OSV/ON*(LOSV-LOE) + beta00*OSVNE/ON*(LOSVNE-LOE) + beta00*OSNV/ON*(LOSNV-LOE) +
-        beta01*YSU/ON*(LYSU-LYE) + beta01*YSV/ON*(LYSV-LYE) + beta01*YSVNE/ON*(LYSVNE-LYE) + beta01*YSNV/ON*(LYSNV-LYE) +
+      dLOI <- beta00*OSU/ON*(LOSU-LOE) + beta00*OSV/ON*(LOSV-LOE) + beta00*OSVNE/ON*(LOSVNE-LOE) + beta00*OSNV/ON*(LOSNV-LOE) + 
+        beta01*YSU/ON*(LYSU-LYE) + beta01*YSV/ON*(LYSV-LYE) + beta01*YSVNE/ON*(LYSVNE-LYE) + beta01*YSNV/ON*(LYSNV-LYE) + 
         gammaI*LOI -1
-      dLYI <- beta10*OSU/YN*(LOSU-LOE) + beta10*OSV/YN*(LOSV-LOE) + beta10*OSVNE/YN*(LOSVNE-LOE) + beta10*OSNV/YN*(LOSNV-LOE) +
+      dLYI <- beta10*OSU/YN*(LOSU-LOE) + beta10*OSV/YN*(LOSV-LOE) + beta10*OSVNE/YN*(LOSVNE-LOE) + beta10*OSNV/YN*(LOSNV-LOE) + 
         beta11*YSU/YN*(LYSU-LYE) + beta11*YSV/YN*(LYSV-LYE) + beta11*YSVNE/YN*(LYSVNE-LYE) + beta11*YSNV/YN*(LYSNV-LYE) +
         gammaI*LYI - 1
-      
+
       dxdt <- c(dOSU, dOSV, dOSVNE, dOSNV, dOE, dOI, dOR, dORV, dYSU, dYSV, dYSVNE, dYSNV, dYE, dYI, dYR, dYRV,
                 dLOSU, dLOSV, dLOSVNE, dLOSNV, dLOE, dLOI, dLYSU, dLYSV, dLYSVNE, dLYSNV, dLYE, dLYI)
       list(dxdt)
@@ -413,10 +421,10 @@ control_server <- function(input, output, session){
     #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -#
     
     while (error_term > d) {
-      
-      # New control
-      new_uO <- out_state[,"OSU"]/Parameters["WO"]*(out_adjoint[,17]- out_adjoint[,18])*(1-old_nv)
-      new_uY <- out_state[,"YSU"]/Parameters["WY"]*(out_adjoint[,23]- out_adjoint[,24])*(1-young_nv)
+
+       # New control 
+    new_uO <- out_state[,"OSU"]/Parameters["WO"]*(out_adjoint[,17]- out_adjoint[,18])
+    new_uY <- out_state[,"YSU"]/Parameters["WY"]*(out_adjoint[,23]- out_adjoint[,24])
       
       if(any(new_uO>upp.control)){
         new_uO <- rep(upp.control,length(times_state))
@@ -502,4 +510,3 @@ control_server <- function(input, output, session){
     
 ## To be copied in the server
 # callModule(mod_original_v2_server, "original_v2_ui_1")
- 
